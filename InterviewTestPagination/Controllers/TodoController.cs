@@ -13,12 +13,13 @@ namespace InterviewTestPagination.Controllers {
     public class TodoController : ApiController {
 
         // TODO: [low priority] setup DI 
-        private readonly IModelService<Todo> _todoService = new TodoService();
+        private readonly IModelService<PagedTodo> _todoService = new TodoService();
 
         [HttpGet]
-        public IEnumerable<Todo> Todos(/* parameters  */) {
-            return _todoService.Repository.All();
+        public PagedTodo Todos(int pageNumber, int? itemsPerPage) {
+            return _todoService.List(pageNumber, itemsPerPage);
         }
+
 
     }
 }

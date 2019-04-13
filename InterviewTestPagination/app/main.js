@@ -4,7 +4,19 @@
     angular
         .module("todoApp")
         .directive("todoPaginatedList", [todoPaginatedList])
-        .directive("pagination", [pagination]);
+        .directive("pagination", [pagination])
+        .factory("DataTransfer", function () {
+        var totalItems = 0;
+        return {
+
+            getTotalItems: function () {
+                return totalItems;
+            },
+            setTotalItems: function (total) {
+                totalItems = total;
+            }
+        }
+    });
 
     /**
      * Directive definition function of 'todoPaginatedList'.
@@ -20,17 +32,12 @@
             restrict: "E", // example setup as an element only
             templateUrl: "app/templates/todo.list.paginated.html",
             scope: {}, // example empty isolate scope
-            controller: ["$scope", "$http", controller],
-            link: link
+            controller: ["$scope", controller],
         };
 
-        function controller($scope, $http) { // example controller creating the scope bindings
+        function controller($scope) { // example controller creating the scope bindings
             $scope.todos = [];
-            // example of xhr call to the server's 'RESTful' api
-            $http.get("api/Todo/Todos").then(response => $scope.todos = response.data);
-        }
-
-        function link(scope, element, attrs) { }
+        };
 
         return directive;
     }
@@ -47,16 +54,44 @@
      */
     function pagination() {
         var directive = {
-            restrict: "E", // example setup as an element only
+            restrict: "E", 
             templateUrl: "app/templates/pagination.html",
-            scope: {}, // example empty isolate scope
-            controller: ["$scope", controller],
-            link: link
+            scope: {},
+            controller: ["$scope", "$http", controller],
         };
 
-        function controller($scope) { }
+        function controller($scope, $http) {
+            $scope.ddl = {
+                selectedOption: { name: "20" },
+                options: [
+                    { name: "10" },
+                    { name: "20" },
+                    { name: "30" },
+                    { name: "all" }
+                ]
+            };
 
-        function link(scope, element, attrs) { }
+            $scope.pageNumber = {
+                value: 1
+            };
+
+            $http.get($scope.$parent.url + "?pageNumber=1&itemsPerPage=20").then(response => {
+                $scope.$parent.todos = response.data.data;
+                $scope.totalItems = response.data.totalItems;
+                $scope.totalPages = response.data.totalPages;
+            });
+
+            $scope.showPage = function (url, pageNumber, itemsPerPage) {
+                $scope.pageNumber.value = isFinite(itemsPerPage) ? pageNumber : 1;
+                
+                $http.get(url + "?pageNumber=" + pageNumber + "&itemsPerPage=" + itemsPerPage)
+                    .success(function (response) {
+                        $scope.$parent.todos = response.data;
+                        $scope.totalItems = response.totalItems;
+                        $scope.totalPages = response.totalPages;
+                    });
+            };
+        };
 
         return directive;
     }

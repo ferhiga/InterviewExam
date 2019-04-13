@@ -30,6 +30,5 @@ namespace InterviewTestPagination.Models.Todo {
         public IEnumerable<Todo> All() {
             return DataSource.Values.OrderByDescending(t => t.CreatedDate);
         }
-
     }
 }
