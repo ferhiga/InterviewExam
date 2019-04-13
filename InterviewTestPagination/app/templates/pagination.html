@@ -8,7 +8,7 @@
     <div>
         <button ng-click="showPage('api/Todo/Todos', 1, ddl.selectedOption.name)" ng-disabled="pageNumber.value == 1">&lt;&lt;</button> <!-- 'go to first page' button -->
         <button ng-click="showPage('api/Todo/Todos', pageNumber.value - 1, ddl.selectedOption.name)" ng-disabled="pageNumber.value == 1">&lt;</button> <!-- 'go to previous page' button: can't go lower than 1 -->
-        Page <input type="number" ng-model="pageNumber.value" min="1"/> <!-- input to select page to go to: go to page when input changes value --> of <span ng-bind="totalPages"></span> <!-- number of pages -->
+        Page <input type="number" ng-model="pageNumber.value" min="1" ng-change="showPage('api/Todo/Todos', pageNumber.value, ddl.selectedOption.name)" max="{{totalPages}}"/> <!-- input to select page to go to: go to page when input changes value --> of <span ng-bind="totalPages"></span> <!-- number of pages -->
 
         <button ng-click="showPage('api/Todo/Todos', pageNumber.value + 1, ddl.selectedOption.name)" ng-disabled="pageNumber.value == totalPages">&gt;</button> <!-- 'go to next page' button: can't go higher than last page number -->
         <button ng-click="showPage('api/Todo/Todos', totalPages, ddl.selectedOption.name)" ng-disabled="pageNumber.value == totalPages">&gt;&gt;</button> <!-- 'go to last page' button -->

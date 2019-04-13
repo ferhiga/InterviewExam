@@ -37,6 +37,18 @@
 
         function controller($scope) { // example controller creating the scope bindings
             $scope.todos = [];
+
+            $scope.column = 'id';
+            $scope.reverse = true;
+
+            $scope.sortColumn = function (col) {
+                $scope.column = col;
+                if ($scope.reverse) {
+                    $scope.reverse = false;
+                } else {
+                    $scope.reverse = true;
+                }
+            };
         };
 
         return directive;
